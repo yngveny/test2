@@ -70,8 +70,7 @@ def fetch_doffin_entry(month, seq, datastore):
 	   return True
     return False
 
-def scrape(start, curmon, end, step = 1): 
-	datastore = []
+def scrape(start, curmon, end, step = 1): datastore = []
     for seq in range(start, end, step):
 	   # Skip already scraped entries
 	   tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = '%d'" % seq)
