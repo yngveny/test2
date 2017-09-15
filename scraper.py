@@ -15,11 +15,11 @@ def get_value(root, select):
 
 def scrape_harder(url):
     for n in [1, 2, 3]:
-	   try:
-	       return scraperwiki.scrape(url).decode('utf-8')
-	   except:
-	       time.sleep(1)
-	       continue
+       try:
+           return scraperwiki.scrape(url).decode('utf-8')
+       except:
+           time.sleep(1)
+           continue
     return scraperwiki.scrape(url).decode('utf-8')
 
 def parse_doffin_entry(month, seq, url, html):
@@ -27,8 +27,8 @@ def parse_doffin_entry(month, seq, url, html):
     titleref = root.cssselect("html title")
     title = titleref[0].text_content()
     if -1 != title.find('Sideparametere ugyldige - Doffin'):
-	   print "Invalid entry"
-	   return None
+       print "Invalid entry"
+       return None
     contentref = root.cssselect("div.notice")
     abstract = get_value(root, "span#ctl00_ContentPlaceHolder1_tab_StandardNoticeView1_notice_introduction1_lblAbstract")
     pubdate = get_value(root,"span#ctl00_ContentPlaceHolder1_tab_StandardNoticeView1_notice_introduction1_lblPubDate")
@@ -40,22 +40,22 @@ def parse_doffin_entry(month, seq, url, html):
     apptype = get_value(root, "span#ctl00_ContentPlaceHolder1_tab_StandardNoticeView1_notice_introduction1_lblDocType")
 
     data = {
-	   'month' : month,
-	   'seq' : seq,
-	   'scrapedurl'  : url,
-	   'title'       : title,
-	   'abstract'    : abstract,
-	   'publisher'   : publisher,
-	   'publishdate' : dateutil.parser.parse(pubdate, dayfirst=True).date(),
-	   'scrapestamputc' : datetime.datetime.now(),
-	   'apptype'     : apptype,
+       'month' : month,
+       'seq' : seq,
+       'scrapedurl'  : url,
+       'title'       : title,
+       'abstract'    : abstract,
+       'publisher'   : publisher,
+       'publishdate' : dateutil.parser.parse(pubdate, dayfirst=True).date(),
+       'scrapestamputc' : datetime.datetime.now(),
+       'apptype'     : apptype,
     }
     # FIXME Figure out how to handle canceled tenders
     if appdeadlinedate is not None and appdeadlinedate != "" and appdeadlinedate != "Kansellert":
-	   #print "'%s'" % appdeadlinedate
-	   data['appdeadline'] = dateutil.parser.parse(appdeadlinedate + " " + appdeadlinetime, dayfirst=True)
+       #print "'%s'" % appdeadlinedate
+       data['appdeadline'] = dateutil.parser.parse(appdeadlinedate + " " + appdeadlinetime, dayfirst=True)
     if appdocdeadline is not None and appdocdeadline != "":
-	   data['appdocdeadline'] = dateutil.parser.parse(appdocdeadline, dayfirst=True).date()
+       data['appdocdeadline'] = dateutil.parser.parse(appdocdeadline, dayfirst=True).date()
     print data
 
     return data
@@ -66,17 +66,17 @@ def fetch_doffin_entry(month, seq, datastore):
     html = scrape_harder(url)
     entry = parse_doffin_entry(month, seq, url, html)
     if entry is not None:
-	   datastore.append(entry)
-	   return True
+       datastore.append(entry)
+       return True
     return False
 
 def scrape(start, curmon, end, step = 1): datastore = []
 for seq in range(start, end, step):
-	# Skip already scraped entries
-	tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = '%d'" % seq)
-	if 0 < len(tmp):
+    # Skip already scraped entries
+    tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = '%d'" % seq)
+    if 0 < len(tmp):
         print "skipping %d already scraped, month %s" % (seq, tmp[0]['month'])
-	    continue
+        continue
         if fetch_doffin_entry(curmon, seq, datastore):
             if 0 == len(datastore) % 10:
                 scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
@@ -87,18 +87,18 @@ for seq in range(start, end, step):
                     datastore = []
                 if fetch_doffin_entry(nextmonth(curmon, step), seq, datastore):
                     curmon = nextmonth(curmon, step)
-                    if 0 < len(datastore):
-                        scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
+                if 0 < len(datastore):
+                    scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
 
 def nextmonth(mon, direction = 1):
     i = 0
     while i < len(months):
-	   #print "if " + mon + " == " + months[i]
-	   if mon == months[i]:
-	       break
-	   i = i + 1
+       #print "if " + mon + " == " + months[i]
+       if mon == months[i]:
+           break
+       i = i + 1
     if i == len(months):
-	   raise ValueError("Unknown month string " + mon)
+       raise ValueError("Unknown month string " + mon)
     #print i, months[i]
     nexti = (i + direction) % (len(months))
     #print nexti, months[nexti]
@@ -107,10 +107,10 @@ def nextmonth(mon, direction = 1):
 def fix_old(count):
     tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = (select min(seq) from swdata where scrapestamputc <= '2012-06-15 09:47:11' and appdocdeadline like '(d%')")
     if 0 < len(tmp):
-	   min = tmp[0]['seq']
-	   curmon = tmp[0]['month']
-	   print "Updating old entries, starting with ", min, curmon, min+count
-	   return scrape(min, curmon, min+count, 1)
+       min = tmp[0]['seq']
+       curmon = tmp[0]['month']
+       print "Updating old entries, starting with ", min, curmon, min+count
+       return scrape(min, curmon, min+count, 1)
 
 print "Starting Doffin scraper"
 
@@ -156,8 +156,8 @@ try:
     curmon = tmp[0]['month']
     print "Starting with " + curmon + " " + str(min)
     if min > 0:
-	   scrape(min-1, curmon, min-fetchperrun, -1)
+       scrape(min-1, curmon, min-fetchperrun, -1)
     else:
-	   print "Reaching the begining, not parsing backwards."
+       print "Reaching the begining, not parsing backwards."
 except scraperwiki.sqlite.SqliteError, e:
     print "No sqlite entries found, not parsing backwards"
