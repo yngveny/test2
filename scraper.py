@@ -69,25 +69,25 @@ def fetch_doffin_entry(month, seq, datastore):
 	   datastore.append(entry)
 	   return True
     return False
-
+	
 def scrape(start, curmon, end, step = 1): datastore = []
-    for seq in range(start, end, step):
-	   # Skip already scraped entries
-	   tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = '%d'" % seq)
-	   if 0 < len(tmp):
-	       print "skipping %d already scraped, month %s" % (seq, tmp[0]['month'])
-	       continue
-	   if fetch_doffin_entry(curmon, seq, datastore):
-	       if 0 == len(datastore) % 10:
-		   scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
-		   datastore = []
-	   else:
-	       if 0 < len(datastore):
-		   scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
-		   datastore = []
-	       if fetch_doffin_entry(nextmonth(curmon, step), seq, datastore):
-		   curmon = nextmonth(curmon, step)
-    if 0 < len(datastore):
+for seq in range(start, end, step):
+   # Skip already scraped entries
+   tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = '%d'" % seq)
+   if 0 < len(tmp):
+       print "skipping %d already scraped, month %s" % (seq, tmp[0]['month'])
+       continue
+   if fetch_doffin_entry(curmon, seq, datastore):
+       if 0 == len(datastore) % 10:
+	   scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
+	   datastore = []
+   	else:
+       		if 0 < len(datastore):
+	   		scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
+	   		datastore = []
+       if fetch_doffin_entry(nextmonth(curmon, step), seq, datastore):
+	   curmon = nextmonth(curmon, step)
+	if 0 < len(datastore):
 	   scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
 
 def nextmonth(mon, direction = 1):
