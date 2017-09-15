@@ -126,8 +126,7 @@ DEC070629
 
 fetchperrun = 1200
 
-# Redo the last 3500 IDs, as the original algorithm starting for the last
-sequence number missed some entries.
+# Redo the last 3500 IDs, as the original algorithm starting for the lastsequence number missed some entries.
 # No idea why, but rescanning hopefully will catch them.
 try:
     tmp = scraperwiki.sqlite.select("seq, month from swdata where seq > (select max(seq) - 1000 from swdata) order by seq limit 1")
