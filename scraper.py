@@ -127,7 +127,7 @@ max = 179504
 
 fetchperrun = 1200
 
-scrape(max+1, curmon, max+fetchperrun)
+#scrape(max+1, curmon, max+fetchperrun)
 
 # Example of non-valid entry
 #fetch_doffin_entry("APR", "100000", datastore)
