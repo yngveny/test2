@@ -76,7 +76,7 @@ for seq in range(start, end, step):
 	tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = '%d'" % seq)
 	if 0 < len(tmp):
         	print "skipping %d already scraped, month %s" % (seq, tmp[0]['month'])
-	    continue
+	continue
         if fetch_doffin_entry(curmon, seq, datastore):
             if 0 == len(datastore) % 10:
                 scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
