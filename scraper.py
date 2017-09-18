@@ -69,7 +69,8 @@ def fetch_doffin_entry(month, seq, datastore):
 	   return True
     return False
 
-def scrape(start, curmon, end, step = 1): datastore = []
+def scrape(start, curmon, end, step = 1): 
+    datastore = []
 
 start = 1
 end = 200
