@@ -2,8 +2,8 @@
 
 import scraperwiki
 import lxml.html
-#import dateutil.parser
-import dateutil
+import dateutil.parser
+#import dateutil
 import datetime
 import time
 
