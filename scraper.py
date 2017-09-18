@@ -71,7 +71,8 @@ def fetch_doffin_entry(month, seq, datastore):
 
 def scrape(start, curmon, end, step = 1): datastore = []
 
-start = datetime.datetime(2009, 10, 5, 18, 00)	
+start = datetime.datetime(2009, 10, 5, 18, 00)
+end = datetime.datetime(2017, 09, 9, 18, 00)
 	
 for seq in range(start, end, step):
 	# Skip already scraped entries
