@@ -73,6 +73,7 @@ def scrape(start, curmon, end, step = 1): datastore = []
 
 start = datetime.datetime(2009, 10, 5, 18, 00)
 end = datetime.datetime(2017, 9, 9, 18, 00)
+step = 1
 	
 for seq in range(start, end, step):
 	# Skip already scraped entries
