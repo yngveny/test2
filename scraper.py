@@ -77,7 +77,7 @@ end = 200
 step = 1
 	
 for seq in range(start, end, step):
-	scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
+	scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=data)
 	# Skip already scraped entries
 	#tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = '%d'" % seq)
 	#if 0 < len(tmp):
