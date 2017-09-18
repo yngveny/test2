@@ -105,8 +105,7 @@ def nextmonth(mon, direction = 1):
     return months[nexti]
 
 def fix_old(count):
-    tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = (select min(seq) from swdata where scrapestamputc <= '2012-06-15 09:47:11'
-and appdocdeadline like '(d%')")
+    tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = (select min(seq) from swdata where scrapestamputc <= '2012-06-15 09:47:11' and appdocdeadline like '(d%')")
     if 0 < len(tmp):
 	   min = tmp[0]['seq']
 	   curmon = tmp[0]['month']
