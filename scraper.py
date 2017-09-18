@@ -116,7 +116,7 @@ def fix_old(count):
 
 print "Starting Doffin scraper"
 
-fix_old(1000)
+#fix_old(1000)
 
 # Random valid number near the time this scraper was created, to bootstrap
 # the scraper
