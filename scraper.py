@@ -111,8 +111,7 @@ def fix_old(count):
     if 0 < len(tmp):
 	   min = tmp[0]['seq']
 	   curmon = tmp[0]['month']
-	   print "Updating old entries, starting with ", min, curmon,
-min+count
+	   print "Updating old entries, starting with ", min, curmon, min+count
 	   return scrape(min, curmon, min+count, 1)
 
 print "Starting Doffin scraper"
