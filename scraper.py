@@ -3,7 +3,7 @@
 import scraperwiki
 import lxml.html
 #import dateutil.parser
-import python-dateutil
+import python.dateutil
 import datetime
 import time
 
