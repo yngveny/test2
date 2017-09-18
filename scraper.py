@@ -127,19 +127,6 @@ max = 179504
 
 fetchperrun = 1200
 
-# Redo the last 3500 IDs, as the original algorithm starting for the last sequence number missed some entries.
-# No idea why, but rescanning hopefully will catch them.
-try:
-    tmp = scraperwiki.sqlite.select("seq, month from swdata where seq > (select max(seq) - 1000 from swdata) order by seq limit 1")
-    max = tmp[0]['seq']
-    curmon = tmp[0]['month']
-#    max = 20412
-#    curmon = 'SEP'
-    print "Starting with " + curmon + " " + str(max)
-except scraperwiki.sqlite.SqliteError, e:
-    print "No sqlite entries found, using default."
-    pass
-
 scrape(max+1, curmon, max+fetchperrun)
 
 # Example of non-valid entry
