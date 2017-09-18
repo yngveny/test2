@@ -123,8 +123,7 @@ print "Starting Doffin scraper"
 curmon = "JUN"
 max = 179504
 
-# Another random valid id in 2007, unreachable using this code 2012-06-20
-DEC070629
+# Another random valid id in 2007, unreachable using this code 2012-06-20 DEC070629
 
 fetchperrun = 1200
 
