@@ -6,8 +6,7 @@ import dateutil.parser
 import datetime
 import time
 
-months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-          'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 
 def get_value(root, select):
     ref = root.cssselect(select)
@@ -46,8 +45,7 @@ def parse_doffin_entry(month, seq, url, html):
 	   'title'       : title,
 	   'abstract'    : abstract,
 	   'publisher'   : publisher,
-	   'publishdate' : dateutil.parser.parse(pubdate,
-dayfirst=True).date(),
+	   'publishdate' : dateutil.parser.parse(pubdate, dayfirst=True).date(),
 	   'scrapestamputc' : datetime.datetime.now(),
 	   'apptype'     : apptype,
     }
@@ -71,26 +69,26 @@ def fetch_doffin_entry(month, seq, datastore):
 	   return True
     return False
 
-def scrape(start, curmon, end, step = 1):
-    datastore = []
-    for seq in range(start, end, step):
-	   # Skip already scraped entries
-	   tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = '%d'" % seq)
-	   if 0 < len(tmp):
-	       print "skipping %d already scraped, month %s" % (seq, tmp[0]['month'])
-	       continue
-	   if fetch_doffin_entry(curmon, seq, datastore):
-	       if 0 == len(datastore) % 10:
-		   scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
-		   datastore = []
-	   else:
-	       if 0 < len(datastore):
-		   scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
-		   datastore = []
-	       if fetch_doffin_entry(nextmonth(curmon, step), seq, datastore):
-		   curmon = nextmonth(curmon, step)
-    if 0 < len(datastore):
-	   scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
+def scrape(start, curmon, end, step = 1): datastore = []
+
+for seq in range(start, end, step):
+	# Skip already scraped entries
+	tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = '%d'" % seq)
+	if 0 < len(tmp):
+        print "skipping %d already scraped, month %s" % (seq, tmp[0]['month'])
+	    continue
+        if fetch_doffin_entry(curmon, seq, datastore):
+            if 0 == len(datastore) % 10:
+                scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
+                datastore = []
+            else:
+                if 0 < len(datastore):
+                    scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
+                    datastore = []
+                if fetch_doffin_entry(nextmonth(curmon, step), seq, datastore):
+                    curmon = nextmonth(curmon, step)
+                    if 0 < len(datastore):
+                        scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
 
 def nextmonth(mon, direction = 1):
     i = 0
@@ -107,7 +105,8 @@ def nextmonth(mon, direction = 1):
     return months[nexti]
 
 def fix_old(count):
-    tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = (select min(seq) from swdata where scrapestamputc <= '2012-06-15 09:47:11' and appdocdeadline like '(d%')")
+    tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = (select min(seq) from swdata where scrapestamputc <= '2012-06-15 09:47:11'
+and appdocdeadline like '(d%')")
     if 0 < len(tmp):
 	   min = tmp[0]['seq']
 	   curmon = tmp[0]['month']
@@ -116,7 +115,7 @@ def fix_old(count):
 
 print "Starting Doffin scraper"
 
-#fix_old(1000)
+fix_old(1000)
 
 # Random valid number near the time this scraper was created, to bootstrap
 # the scraper
@@ -127,7 +126,7 @@ max = 179504
 
 fetchperrun = 1200
 
-#scrape(max+1, curmon, max+fetchperrun)
+scrape(max+1, curmon, max+fetchperrun)
 
 # Example of non-valid entry
 #fetch_doffin_entry("APR", "100000", datastore)
