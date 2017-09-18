@@ -7,4 +7,5 @@
 
 lxml==3.4.4
 cssselect==1.0.1
-dateutil.parser==2.6.0
+#dateutil.parser==2.6.0
+python-dateutil==2.6.1
