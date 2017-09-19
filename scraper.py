@@ -72,10 +72,7 @@ def fetch_doffin_entry(month, seq, datastore):
 def scrape(start, curmon, end, step = 1): 
     datastore = []
 
-start = 1
-end = 200
-step = 1
-	
+
 for seq in range(start, end, step):
 	scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=data)
 	# Skip already scraped entries
