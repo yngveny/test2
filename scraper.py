@@ -69,29 +69,26 @@ def fetch_doffin_entry(month, seq, datastore):
 	   return True
     return False
 
-def scrape(start, curmon, end, step = 1): 
+def scrape(start, curmon, end, step = 1):
     datastore = []
-
-
-for seq in range(start, end, step):
-	scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=data)
-	# Skip already scraped entries
-	#tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = '%d'" % seq)
-	#if 0 < len(tmp):
-        #	print "skipping %d already scraped, month %s" % (seq, tmp[0]['month'])
-	#continue
-        #if fetch_doffin_entry(curmon, seq, datastore):
-        #    if 0 == len(datastore) % 10:
-        #        scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
-        #        datastore = []
-        #    else:
-        #        if 0 < len(datastore):
-        #            scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
-        #            datastore = []
-        #        if fetch_doffin_entry(nextmonth(curmon, step), seq, datastore):
-        #            curmon = nextmonth(curmon, step)
-        #            if 0 < len(datastore):
-        #                scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
+    for seq in range(start, end, step):
+	   # Skip already scraped entries
+	   tmp = scraperwiki.sqlite.select("seq, month from swdata where seq = '%d'" % seq)
+	   if 0 < len(tmp):
+	       print "skipping %d already scraped, month %s" % (seq, tmp[0]['month'])
+	       continue
+	   if fetch_doffin_entry(curmon, seq, datastore):
+	       if 0 == len(datastore) % 10:
+		   scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
+		   datastore = []
+	   else:
+	       if 0 < len(datastore):
+		   scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
+		   datastore = []
+	       if fetch_doffin_entry(nextmonth(curmon, step), seq, datastore):
+		   curmon = nextmonth(curmon, step)
+    if 0 < len(datastore):
+	   scraperwiki.sqlite.save(unique_keys=['month', 'seq'], data=datastore)
 
 def nextmonth(mon, direction = 1):
     i = 0
@@ -124,9 +121,23 @@ fix_old(1000)
 curmon = "JUN"
 max = 179504
 
-# Another random valid id in 2007, unreachable using this code 2012-06-20 DEC070629
+# Another random valid id in 2007, unreachable using this code 2012-06-20
+DEC070629
 
 fetchperrun = 1200
+
+# Redo the last 3500 IDs, as the original algorithm starting for the last sequence number missed some entries.
+# No idea why, but rescanning hopefully will catch them.
+try:
+    tmp = scraperwiki.sqlite.select("seq, month from swdata where seq > (select max(seq) - 1000 from swdata) order by seq limit 1")
+    max = tmp[0]['seq']
+    curmon = tmp[0]['month']
+#    max = 20412
+#    curmon = 'SEP'
+    print "Starting with " + curmon + " " + str(max)
+except scraperwiki.sqlite.SqliteError, e:
+    print "No sqlite entries found, using default."
+    pass
 
 scrape(max+1, curmon, max+fetchperrun)
 
